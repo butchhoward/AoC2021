@@ -1,0 +1,14 @@
+name: check-build
+on: [push]
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: make clean all
+      - name: run-tests
+        run: ./test_solve
+        shell: bash
+      - name: solve puzzles
+        run: ./scripts/run_all_days.sh
+        shell: bash
