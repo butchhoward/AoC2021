@@ -46,13 +46,6 @@ int main(int argc, char *argv[])
 
     DaysType days = {
          {1, day01}
-        ,{01, day01}
-    ,{01, day01}
-    ,{01, day01}
-    ,{01, day01}
-    ,{01, day01}
-    ,{01, day01}
-    ,{01, day01}
     //MAKEMODULE LIST MARKER. DO NOT DELETE
     };
 
