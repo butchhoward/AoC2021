@@ -1,11 +1,11 @@
-Something to start with
+Converted to CMake this year
 
 Assumes a folder structure of:
 
 ```
 base
     src
-    src_test
+    tests
     include
 ```
 

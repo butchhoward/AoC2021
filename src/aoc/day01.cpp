@@ -1,5 +1,5 @@
-#include "day01.h"
-#include "day01_lib.h"
+#include <aoc/day01.h>
+#include <aoc/day01_lib.h>
 #include <iostream>
 #include <fstream>
 

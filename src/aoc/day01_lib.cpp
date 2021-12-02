@@ -1,4 +1,4 @@
-#include "day01_lib.h"
+#include <aoc/day01_lib.h>
 
 #include <iostream>
 #include <sstream>

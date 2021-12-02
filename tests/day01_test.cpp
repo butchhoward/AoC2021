@@ -1,5 +1,5 @@
-#include "day01_test.h"
-#include "day01_lib.h"
+#include "./day01_test.h"
+#include <aoc/day01_lib.h>
 #include "test_runner.h"
 #include <sstream>
 #include <fstream>

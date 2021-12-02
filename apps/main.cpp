@@ -1,10 +1,4 @@
-#include "day01.h"
-#include "day01.h"
-#include "day01.h"
-#include "day01.h"
-#include "day01.h"
-#include "day01.h"
-#include "day01.h"
+#include <aoc/day01.h>
 //MAKEMODULE INCLUDE MARKER. DO NOT DELETE
 
 
@@ -17,7 +11,7 @@
 #include <functional>
 #include <map>
 
-#include <chrono_helpers.h>
+#include <library/chrono_helpers.h>
 
 
 typedef std::function<int(const std::string&)> DayFunction;
