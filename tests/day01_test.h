@@ -3,7 +3,7 @@
 
 namespace day01test {
 
-bool day01_test();
+// bool day01_test();
 
 }
 
