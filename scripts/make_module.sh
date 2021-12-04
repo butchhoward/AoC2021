@@ -201,30 +201,34 @@ sed -E -i '' -e "s~${INCLUDE_MARKER}~${MAIN_INCLUDE_ITEM}"$'\\\n'"&~g" ./apps/ma
 sed -E -i '' -e "s~${LIST_MARKER}~${DAY_MAP_ITEM}"$'\\\n'"    &~g"  ./apps/main.cpp
 
 
-# update cmake files
+function insert_cmake_items()
+{
+    local CMAKEFILE="$1"
+    local MARKER="$2"
+    shift; shift;
+    local ITEMS="$@"
+
+    for s in ${ITEMS[@]}; do
+        sed -E -i '' -e "s~${MARKER}~&"$'\\\n'"${s}~g" "${CMAKEFILE}"
+    done
+}
+
 HEADER_MARKER='set\(HEADER_LIST'
-HEADER_ITEMS=("\"\${PROJECT_SOURCE_DIR}/include/${FOLDER}/${MODULE}_lib\.h\"" \
-              "\"\${PROJECT_SOURCE_DIR}/include/${FOLDER}/${MODULE}\.h\"" \
+HEADER_ITEMS=("\"\${PROJECT_SOURCE_DIR}/include/${FOLDER}/${MODULE}_lib.h\"" \
+              "\"\${PROJECT_SOURCE_DIR}/include/${FOLDER}/${MODULE}.h\"" \
 )
 
-SOURCE_MARKER='add_library\(aoc_library'
-SOURCE_ITEMS=( "\"\${PROJECT_SOURCE_DIR}/src/${FOLDER}/${MODULE}_lib\.cpp\"" \
-               "\"\${PROJECT_SOURCE_DIR}/src/${FOLDER}/${MODULE}\.cpp\"" \
+SOURCE_MARKER="add_library\(${FOLDER}_library"
+SOURCE_ITEMS=( "\"\${PROJECT_SOURCE_DIR}/src/${FOLDER}/${MODULE}_lib.cpp\"" \
+               "\"\${PROJECT_SOURCE_DIR}/src/${FOLDER}/${MODULE}.cpp\"" \
 )
 
-TEST_MARKER='add_executable\(testaoc'
+TEST_MARKER="add_executable\(test${FOLDER}"
 TEST_ITEMS=( \
     ${MODULE}_test.cpp \
 )
 
-for s in "${HEADER_ITEMS[@]}"; do
-    sed -E -i '' -e "s~${HEADER_MARKER}~&"$'\\\n'"${s}~g" ./src/CMakeLists.txt
-done
 
-for s in "${SOURCE_ITEMS[@]}"; do
-    sed -E -i '' -e "s~${SOURCE_MARKER}~&"$'\\\n'"${s}~g" ./src/CMakeLists.txt
-done
-
-for s in "${TEST_ITEMS[@]}"; do
-    sed -E -i '' -e "s~${TEST_MARKER}~&"$'\\\n'"${s}~g" ./tests/CMakeLists.txt
-done
+insert_cmake_items ./src/CMakeLists.txt "${HEADER_MARKER}" "${HEADER_ITEMS[@]}"
+insert_cmake_items ./src/CMakeLists.txt "${SOURCE_MARKER}" "${SOURCE_ITEMS[@]}"
+insert_cmake_items ./tests/CMakeLists.txt "${TEST_MARKER}" "${TEST_ITEMS[@]}"
