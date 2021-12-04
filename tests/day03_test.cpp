@@ -30,14 +30,14 @@ std::string sample_data =
 TEST( day03, test_sample_data ) {
     std::istringstream data_stream(sample_data);
     auto p = part1_solve(data_stream);
-    EXPECT_EQ(999999999, p);
+    EXPECT_EQ(198, p);
 }
 
-TEST( day03, test_sample_data_part2 ) {
-    std::istringstream data_stream(sample_data);
-    auto p = part2_solve(data_stream);
-    EXPECT_EQ(999999999, p);
-}
+// TEST( day03, test_sample_data_part2 ) {
+//     std::istringstream data_stream(sample_data);
+//     auto p = part2_solve(data_stream);
+//     EXPECT_EQ(999999999, p);
+// }
 
 TEST( day03, test_data_1 ) {
     std::string data_file_name = "../data/day03_data.txt";
@@ -46,18 +46,18 @@ TEST( day03, test_data_1 ) {
 
     auto p1 = part1_solve(datafile);
 
-    EXPECT_EQ(999999999, p1);
+    EXPECT_EQ(3959450, p1);
 }
 
-TEST( day03, test_data_2 )
-{
-    std::string data_file_name = "../data/day03_data.txt";
-    std::ifstream datafile(data_file_name);
-    ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
+// TEST( day03, test_data_2 )
+// {
+//     std::string data_file_name = "../data/day03_data.txt";
+//     std::ifstream datafile(data_file_name);
+//     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
 
-    auto p2 = part2_solve(datafile);
+//     auto p2 = part2_solve(datafile);
 
-    EXPECT_EQ(999999999, p2);
-}
+//     EXPECT_EQ(999999999, p2);
+// }
 
 }

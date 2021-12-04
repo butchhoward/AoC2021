@@ -10,36 +10,98 @@
 #include <numeric>
 #include <functional>
 
+
 using namespace day03lib;
 
 namespace {
 
-typedef int Thing;
-typedef std::vector<Thing> Things;
+typedef std::vector<bool> DiagnosticCode;
+typedef std::vector<DiagnosticCode> DiagnosticCodes;
 
-Things parse_datastream(std::istream& data_stream)
+int diagnostic_code_to_int(DiagnosticCode c)
 {
-    Things data;
+    int value{0};
+    for ( auto b : c)
+    {
+        value = value << 1;
+        value |= b ? 1 : 0;
+    }
+    return value;
+}
+
+// std::string diagnostic_code_to_string(DiagnosticCode c)
+// {
+//     std::string s;
+//     for (auto b : c)
+//     {
+//         s += b ? "1" : "0";
+//     }
+//     return s;
+// }
+
+DiagnosticCodes parse_datastream(std::istream& data_stream)
+{
+    DiagnosticCodes codes;
 
     std::string line;
     for (;std::getline(data_stream, line);)
-    {   
-        std::istringstream v(line);
+    {
+        DiagnosticCode c;
+        for ( auto s : line )
+        {
+            bool bit{false};
+            bit = s == '1';
+            c.push_back(bit);
+        }
+        // std::cout << diagnostic_code_to_string(c) << std::endl;
+        codes.push_back( c );
     }
-    
-    return data;
+
+    return codes;
 }
 
 }
 
 std::size_t day03lib::part1_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto codes = parse_datastream(data_stream);
+
+    DiagnosticCode exemplar = codes[0];
+    std::vector<int> one_counts(exemplar.size(), 0);
+    std::vector<int> zero_counts(exemplar.size(), 0);
+
+    for ( auto c : codes)
+    {
+        for (size_t i = 0; i < exemplar.size(); ++i)
+        {
+            if (c[i])
+            {
+                one_counts[i] = one_counts[i] + 1;
+            }
+            else
+            {
+                zero_counts[i] = zero_counts[i] + 1;
+            }
+        }
+    }
+
+    DiagnosticCode gamma;
+    DiagnosticCode epsilon;
+
+    for (size_t i = 0; i < exemplar.size(); ++i)
+    {
+        gamma.push_back(one_counts[i] > zero_counts[i]);
+        epsilon.push_back(zero_counts[i] >= one_counts[i]);
+    }
+
+    // std::cout << diagnostic_code_to_string(gamma) << "=" << diagnostic_code_to_int(gamma) << " "
+    //           << diagnostic_code_to_string(epsilon) << "=" << diagnostic_code_to_int(epsilon) << std::endl;
+
+    return diagnostic_code_to_int(gamma) * diagnostic_code_to_int(epsilon);
 }
 
 std::size_t day03lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
+    auto DiagnosticCodes = parse_datastream(data_stream);
     return 0;
 }
