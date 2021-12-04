@@ -38,18 +38,18 @@ std::map<std::string, Direction> DirectionName = {
 typedef struct NavCommand
 {
     NavCommand():
-        name("HALT"), direction(DirectionName[name]), distance(0)
+        name("HALT"), direction(DirectionName[name]), value(0)
     {
     }
 
     NavCommand(std::string c, int d):
-        name(c), direction(DirectionName[name]), distance(d)
+        name(c), direction(DirectionName[name]), value(d)
     {
     }
 
     std::string name;
     Direction direction;
-    int distance;
+    int value;
 } NavCommand;
 typedef std::vector<NavCommand> NavCommands;
 
@@ -70,7 +70,7 @@ typedef std::vector<NavCommand> NavCommands;
 
 //     os << n.name
 //        << ":"
-//        << n.distance
+//        << n.value
 //        ;
 
 //     return os;
@@ -98,11 +98,11 @@ NavCommand parse_data_line( const std::string& pp )
     auto fields = pp | split_strs(' ');
     auto fields_as_vector = std::vector<std::string>(fields.begin(), fields.end());
 
-    int distance{0};
+    int value{0};
     std::istringstream s_value(fields_as_vector[1]);
-    s_value >> distance;
+    s_value >> value;
 
-    return NavCommand(fields_as_vector[0], distance);
+    return NavCommand(fields_as_vector[0], value);
 }
 
 
@@ -133,11 +133,12 @@ std::size_t day2lib::part1_solve(std::istream& data_stream)
     for ( auto c : commands )
     {
         switch (c.direction) {
-        case Direction::FORWARD: horizontal += c.distance; break;
-        case Direction::BACK: horizontal -= c.distance; break;
-        case Direction::UP: vertical -= c.distance; break;
-        case Direction::DOWN: vertical += c.distance; break;
+        case Direction::FORWARD: horizontal += c.value; break;
 
+        case Direction::UP: vertical -= c.value; break;
+        case Direction::DOWN: vertical += c.value; break;
+
+        case Direction::BACK:
         case Direction::PORT:
         case Direction::STARBOARD:
         case Direction::HALT:
@@ -154,6 +155,37 @@ std::size_t day2lib::part1_solve(std::istream& data_stream)
 
 std::size_t day2lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto commands = parse_datastream(data_stream);
+
+    // std::cout << commands << std::endl;
+
+    int vertical{0};
+    int horizontal{0};
+    int aim{0};
+    for ( auto c : commands )
+    {
+        switch (c.direction) {
+        case Direction::FORWARD:
+        {
+            horizontal += c.value;
+            vertical += c.value * aim;
+            break;
+        }
+
+        case Direction::UP: aim -= c.value; break;
+        case Direction::DOWN: aim += c.value; break;
+
+        case Direction::BACK:
+        case Direction::PORT:
+        case Direction::STARBOARD:
+        case Direction::HALT:
+        default:
+            std::cout << "Not handled: ";
+            break;
+        }
+
+        // std::cout << c << ", " << vertical << ", " << horizontal << std::endl;
+    }
+
+    return vertical * horizontal;
 }

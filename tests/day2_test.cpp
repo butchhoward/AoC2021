@@ -31,7 +31,7 @@ TEST( day2, test_sample_data ) {
 TEST( day2, test_sample_data_part2 ) {
     std::istringstream data_stream(sample_data);
     auto p = part2_solve(data_stream);
-    EXPECT_EQ(999999999, p);
+    EXPECT_EQ(900, p);
 }
 
 TEST( day2, test_data_1 ) {
@@ -52,7 +52,7 @@ TEST( day2, test_data_2 )
 
     auto p2 = part2_solve(datafile);
 
-    EXPECT_EQ(999999999, p2);
+    EXPECT_EQ(1451210346, p2);
 }
 
 }
