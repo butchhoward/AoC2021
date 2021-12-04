@@ -4,13 +4,14 @@
 # ./scripts/make_module DD [module_base_name]
 # DD == day number. If not present 999 is used.
 # module_name = optional. defaults to 'day'
-# 
+#
 # Example:
 #   ./scripts/make_module 01
 # creates library, src_test, src files for day01 with skeleton files
 
-DAY_NUMBER="${1:-999}"
-MODULE="${2:-"day"}${DAY_NUMBER}"
+DAY_NUMBER="${1:-99}"
+DAY_NUMBER_PAD="$(printf "%02d" ${DAY_NUMBER})"
+MODULE="${2:-"day"}${DAY_NUMBER_PAD}"
 
 MODULEUP=${MODULE^^}
 FOLDER="aoc"
@@ -56,10 +57,10 @@ Things parse_datastream(std::istream& data_stream)
 
     std::string line;
     for (;std::getline(data_stream, line);)
-    {   
+    {
         std::istringstream v(line);
     }
-    
+
     return data;
 }
 
@@ -144,7 +145,7 @@ using namespace ${MODULE}test;
 
 namespace {
 
-std::string sample_data = 
+std::string sample_data =
     "xx\n"
     "xx\n"
     ;
