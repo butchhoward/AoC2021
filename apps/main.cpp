@@ -23,7 +23,7 @@ auto datafile(int day)
 {
     //dayNN_data.txt
     std::stringstream d;
-    d << "./data/day" << std::setfill('0') << std::setw(2) << day << "_data.txt";
+    d << "../data/day" << std::setfill('0') << std::setw(2) << day << "_data.txt";
     return d.str();
 }
 
