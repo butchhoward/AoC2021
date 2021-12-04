@@ -1,5 +1,6 @@
 #include <aoc/day01_lib.h>
 
+#include <climits>
 #include <iostream>
 #include <sstream>
 #include <cstddef>

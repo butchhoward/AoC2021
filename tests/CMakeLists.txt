@@ -23,7 +23,6 @@ target_link_libraries(testaoc
                       PRIVATE 
                       gtest_main
                       aoc_library
-                      ${LIBGIT2_LIBRARIES}
                     )
 
 add_test(NAME testaoctest COMMAND testaoc)

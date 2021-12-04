@@ -144,24 +144,19 @@ using namespace ${MODULE}test;
 
 namespace {
 
-std::string sample_data_1 = 
-    "xx\n"
-    "xx\n"
-    ;
-
-std::string sample_data_2 = 
+std::string sample_data = 
     "xx\n"
     "xx\n"
     ;
 
 TEST( ${MODULE}, test_sample_data ) {
-    std::istringstream data_stream(sample_data_1);
+    std::istringstream data_stream(sample_data);
     auto p = part1_solve(data_stream);
     EXPECT_EQ(999999999, p);
 }
 
 TEST( ${MODULE}, test_sample_data_part2 ) {
-    std::istringstream data_stream(sample_data_2);
+    std::istringstream data_stream(sample_data);
     auto p = part2_solve(data_stream);
     EXPECT_EQ(999999999, p);
 }

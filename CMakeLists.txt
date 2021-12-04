@@ -1,5 +1,6 @@
 # Requires Cmake 3.20 now
 cmake_minimum_required(VERSION 3.17)
+set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-11")
 
 # Project name and a few useful settings. Other commands can pick up the results
 project(
@@ -8,11 +9,13 @@ project(
   DESCRIPTION "Advent of Code 2021"
   LANGUAGES CXX)
 
+
 # Only do these if this is the main project, and not if it is included through add_subdirectory
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
   # Optionally set things like CMAKE_CXX_STANDARD, CMAKE_POSITION_INDEPENDENT_CODE here
   set(CMAKE_CXX_STANDARD 20)
+
 
   # Let's ensure -std=c++xx instead of -std=g++xx
   set(CMAKE_CXX_EXTENSIONS OFF)
@@ -44,12 +47,12 @@ endif()
 include(FetchContent)
 
 # Formatting library
-FetchContent_Declare(
-  fmtlib
-  GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-  GIT_TAG 5.3.0
-)
-FetchContent_MakeAvailable(fmtlib)
+# FetchContent_Declare(
+#   fmtlib
+#   GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+#   GIT_TAG 5.3.0
+# )
+# FetchContent_MakeAvailable(fmtlib)
 # Adds fmt::fmt
 
 # homebrew puts things in different places depending on the system

@@ -4,7 +4,6 @@
 set(HEADER_LIST
 "${PROJECT_SOURCE_DIR}/include/aoc/day2.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day2_lib.h"
-    "${PROJECT_SOURCE_DIR}/include/library/chrono_helpers.h"
     "${PROJECT_SOURCE_DIR}/include/aoc/day01_lib.h"
     "${PROJECT_SOURCE_DIR}/include/aoc/day01.h"
 )
@@ -17,14 +16,15 @@ add_library(aoc_library
             "${PROJECT_SOURCE_DIR}/src/aoc/day01_lib.cpp"
             "${PROJECT_SOURCE_DIR}/src/aoc/day01.cpp"
             ${HEADER_LIST})
-target_include_directories(aoc_library PUBLIC ../include ${LIBGIT2_INCLUDE_DIR})
+target_include_directories(aoc_library PUBLIC ../include)
 target_compile_features(aoc_library PUBLIC cxx_std_20)
 
 
 add_library(aoc_core
-            "${PROJECT_SOURCE_DIR}/src/library/chrono_helpers.cpp"
+        "${PROJECT_SOURCE_DIR}/src/library/dummy.cpp"
+        "${PROJECT_SOURCE_DIR}/src/library/chrono_helpers.cpp"
             ${HEADER_LIST})
-target_include_directories(aoc_core PUBLIC ../include ${LIBGIT2_INCLUDE_DIR})
+target_include_directories(aoc_core PUBLIC ../include)
 target_compile_features(aoc_core PUBLIC cxx_std_20)
 
 # IDEs should put the headers in a nice place

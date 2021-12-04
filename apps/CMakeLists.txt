@@ -12,6 +12,4 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
                         PRIVATE
                         aoc_library
                         aoc_core
-                        fmt::fmt
-                        ${LIBGIT2_LIBRARIES}
                     )

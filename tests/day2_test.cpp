@@ -12,24 +12,24 @@ using namespace day2test;
 
 namespace {
 
-std::string sample_data_1 = 
-    "xx\n"
-    "xx\n"
+std::string sample_data = 
+    "forward 5\n"
+    "down 5\n"
+    "forward 8\n"
+    "up 3\n"
+    "down 8\n"
+    "forward 2\n"
     ;
 
-std::string sample_data_2 = 
-    "xx\n"
-    "xx\n"
-    ;
 
 TEST( day2, test_sample_data ) {
-    std::istringstream data_stream(sample_data_1);
+    std::istringstream data_stream(sample_data);
     auto p = part1_solve(data_stream);
     EXPECT_EQ(999999999, p);
 }
 
 TEST( day2, test_sample_data_part2 ) {
-    std::istringstream data_stream(sample_data_2);
+    std::istringstream data_stream(sample_data);
     auto p = part2_solve(data_stream);
     EXPECT_EQ(999999999, p);
 }
