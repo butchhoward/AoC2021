@@ -1,5 +1,5 @@
 #include <aoc/day01.h>
-#include "aoc/day2.h"
+#include "aoc/day02.h"
 #include "aoc/day03.h"
 //MAKEMODULE INCLUDE MARKER. DO NOT DELETE
 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     DaysType days = {
          {1, day01}
-    ,{2, day2}
+    ,{2, day02}
     ,{3, day03}
     //MAKEMODULE LIST MARKER. DO NOT DELETE
     };

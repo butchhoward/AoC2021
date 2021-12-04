@@ -1,11 +1,11 @@
-#include "aoc/day2.h"
-#include "aoc/day2_lib.h"
+#include "aoc/day02.h"
+#include "aoc/day02_lib.h"
 #include <iostream>
 #include <fstream>
 
-using namespace day2lib;
+using namespace day02lib;
 
-int day2(const std::string& filename)
+int day02(const std::string& filename)
 {
     std::ifstream datafile(filename);
     if(!datafile)

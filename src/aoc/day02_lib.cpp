@@ -1,4 +1,4 @@
-#include "aoc/day2_lib.h"
+#include "aoc/day02_lib.h"
 
 #include <iostream>
 #include <sstream>
@@ -11,7 +11,7 @@
 #include <functional>
 #include <ranges>
 
-using namespace day2lib;
+using namespace day02lib;
 
 namespace {
 
@@ -122,7 +122,7 @@ NavCommands parse_datastream(std::istream& data_stream)
 
 }
 
-std::size_t day2lib::part1_solve(std::istream& data_stream)
+std::size_t day02lib::part1_solve(std::istream& data_stream)
 {
     auto commands = parse_datastream(data_stream);
 
@@ -153,7 +153,7 @@ std::size_t day2lib::part1_solve(std::istream& data_stream)
     return vertical * horizontal;
 }
 
-std::size_t day2lib::part2_solve(std::istream& data_stream)
+std::size_t day02lib::part2_solve(std::istream& data_stream)
 {
     auto commands = parse_datastream(data_stream);
 

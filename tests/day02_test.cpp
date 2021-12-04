@@ -1,14 +1,14 @@
 #include "gtest/gtest.h"
 
-#include "day2_test.h"
-#include <aoc/day2_lib.h>
+#include "day02_test.h"
+#include <aoc/day02_lib.h>
 
 #include <sstream>
 #include <fstream>
 #include <string>
 
-using namespace day2lib;
-using namespace day2test;
+using namespace day02lib;
+using namespace day02test;
 
 namespace {
 
@@ -22,19 +22,19 @@ std::string sample_data =
     ;
 
 
-TEST( day2, test_sample_data ) {
+TEST( day02, test_sample_data ) {
     std::istringstream data_stream(sample_data);
     auto p = part1_solve(data_stream);
     EXPECT_EQ(150, p);
 }
 
-TEST( day2, test_sample_data_part2 ) {
+TEST( day02, test_sample_data_part2 ) {
     std::istringstream data_stream(sample_data);
     auto p = part2_solve(data_stream);
     EXPECT_EQ(900, p);
 }
 
-TEST( day2, test_data_1 ) {
+TEST( day02, test_data_1 ) {
     std::string data_file_name = "../data/day02_data.txt";
     std::ifstream datafile(data_file_name);
     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
@@ -44,7 +44,7 @@ TEST( day2, test_data_1 ) {
     EXPECT_EQ(1250395, p1);
 }
 
-TEST( day2, test_data_2 )
+TEST( day02, test_data_2 )
 {
     std::string data_file_name = "../data/day02_data.txt";
     std::ifstream datafile(data_file_name);

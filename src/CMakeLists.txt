@@ -4,8 +4,8 @@
 set(HEADER_LIST
 "${PROJECT_SOURCE_DIR}/include/aoc/day03.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day03_lib.h"
-"${PROJECT_SOURCE_DIR}/include/aoc/day2.h"
-"${PROJECT_SOURCE_DIR}/include/aoc/day2_lib.h"
+"${PROJECT_SOURCE_DIR}/include/aoc/day02.h"
+"${PROJECT_SOURCE_DIR}/include/aoc/day02_lib.h"
     "${PROJECT_SOURCE_DIR}/include/aoc/day01_lib.h"
     "${PROJECT_SOURCE_DIR}/include/aoc/day01.h"
 )
@@ -15,8 +15,8 @@ set(HEADER_LIST
 add_library(aoc_library
 "${PROJECT_SOURCE_DIR}/src/aoc/day03.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day03_lib.cpp"
-"${PROJECT_SOURCE_DIR}/src/aoc/day2.cpp"
-"${PROJECT_SOURCE_DIR}/src/aoc/day2_lib.cpp"
+"${PROJECT_SOURCE_DIR}/src/aoc/day02.cpp"
+"${PROJECT_SOURCE_DIR}/src/aoc/day02_lib.cpp"
             "${PROJECT_SOURCE_DIR}/src/aoc/day01_lib.cpp"
             "${PROJECT_SOURCE_DIR}/src/aoc/day01.cpp"
             ${HEADER_LIST})

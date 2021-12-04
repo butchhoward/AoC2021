@@ -15,13 +15,13 @@ FetchContent_MakeAvailable(googletest)
 # Just add sets of these four commands
 add_executable(testaoc
 day03_test.cpp
-day2_test.cpp
+day02_test.cpp
                day01_test.cpp
               )
 target_compile_features(testaoc PRIVATE cxx_std_20)
 
-target_link_libraries(testaoc 
-                      PRIVATE 
+target_link_libraries(testaoc
+                      PRIVATE
                       gtest_main
                       aoc_library
                     )
