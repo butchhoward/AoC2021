@@ -24,13 +24,13 @@ SonarDepths parse_datastream(std::istream& data_stream)
 
     std::string line;
     for (;std::getline(data_stream, line);)
-    {   
+    {
         int depth{0};
         std::istringstream s_value(line);
         s_value >> depth;
         depths.push_back(depth);
     }
-    
+
     return depths;
 }
 
