@@ -71,7 +71,7 @@ std::size_t day01lib::part2_solve(std::istream& data_stream)
     for ( std::size_t index=0; index < depths.size(); ++index )
     {
         int current{0};
-        for (auto window = index; window < index + 3; ++window)
+        for (auto window = index; window < depths.size() && window < index + 3; ++window)
         {
             current += depths[window];
         }
