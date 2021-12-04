@@ -14,6 +14,7 @@ FetchContent_MakeAvailable(googletest)
 # There can be multiple test programs
 # Just add sets of these four commands
 add_executable(testaoc
+day2_test.cpp
                day01_test.cpp
               )
 target_compile_features(testaoc PRIVATE cxx_std_20)
