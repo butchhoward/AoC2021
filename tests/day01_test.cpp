@@ -11,7 +11,7 @@ using namespace day01test;
 
 namespace {
 
-std::string sample_data = 
+std::string sample_data_1 = 
     "199\n"
     "200\n"
     "208\n"
@@ -24,21 +24,33 @@ std::string sample_data =
     "263\n"
     ;
 
+std::string sample_data_2 = 
+    "199  A      \n"
+    "200  A B    \n"
+    "208  A B C  \n"
+    "210    B C D\n"
+    "200  E   C D\n"
+    "207  E F   D\n"
+    "240  E F G  \n"
+    "269    F G H\n"
+    "260      G H\n"
+    "263        H\n"
+
 
 TEST( day01, test_sample_data ) {
-    std::istringstream data_stream(sample_data);
+    std::istringstream data_stream(sample_data_1);
     auto p = part1_solve(data_stream);
     EXPECT_EQ(7, p);
 }
 
 TEST( day01, test_sample_data_part2 ) {
-    std::istringstream data_stream(sample_data);
+    std::istringstream data_stream(sample_data_2);
     auto p = part2_solve(data_stream);
-    EXPECT_EQ(999999999, p);
+    EXPECT_EQ(5, p);
 }
 
 TEST( day01, test_data ) {
-    std::string data_file_name = "./data/day01_data.txt";
+    std::string data_file_name = "../data/day01_data.txt";
 
     std::ifstream datafile(data_file_name);
     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
