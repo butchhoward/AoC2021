@@ -12,15 +12,23 @@ using namespace day01test;
 namespace {
 
 std::string sample_data = 
-    "xx\n"
-    "xx\n"
+    "199\n"
+    "200\n"
+    "208\n"
+    "210\n"
+    "200\n"
+    "207\n"
+    "240\n"
+    "269\n"
+    "260\n"
+    "263\n"
     ;
 
 
 TEST( day01, test_sample_data ) {
     std::istringstream data_stream(sample_data);
     auto p = part1_solve(data_stream);
-    EXPECT_EQ(999999999, p);
+    EXPECT_EQ(7, p);
 }
 
 TEST( day01, test_sample_data_part2 ) {
