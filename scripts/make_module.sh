@@ -166,18 +166,24 @@ TEST( ${MODULE}, test_sample_data_part2 ) {
     EXPECT_EQ(999999999, p);
 }
 
-TEST( ${MODULE}, test_data ) {
+TEST( ${MODULE}, test_data_1 ) {
     std::string data_file_name = "../data/${MODULE}_data.txt";
-
     std::ifstream datafile(data_file_name);
     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
 
     auto p1 = part1_solve(datafile);
 
-    std::ifstream datafile2(data_file_name);
-    auto p2 = part2_solve(datafile2);
-
     EXPECT_EQ(999999999, p1);
+}
+
+TEST( ${MODULE}, test_data_2 )
+{
+    std::string data_file_name = "../data/${MODULE}_data.txt";
+    std::ifstream datafile(data_file_name);
+    ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
+
+    auto p2 = part2_solve(datafile);
+
     EXPECT_EQ(999999999, p2);
 }
 
