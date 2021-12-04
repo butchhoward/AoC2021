@@ -63,6 +63,25 @@ std::size_t day01lib::part1_solve(std::istream& data_stream)
 
 std::size_t day01lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto depths = parse_datastream(data_stream);
+    int count{0};
+    int last{INT_MAX};
+
+    for ( std::size_t index=0; index < depths.size(); ++index )
+    {
+        int current{0};
+        for (auto window = index; window < index + 3; ++window)
+        {
+            current += depths[window];
+        }
+
+        if (current > last)
+        {
+            ++count;
+        }
+
+        last = current;
+    }
+
+    return count;
 }

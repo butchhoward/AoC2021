@@ -24,20 +24,6 @@ std::string sample_data_1 =
     "263\n"
     ;
 
-std::string sample_data_2 = 
-    "199  A      \n"
-    "200  A B    \n"
-    "208  A B C  \n"
-    "210    B C D\n"
-    "200  E   C D\n"
-    "207  E F   D\n"
-    "240  E F G  \n"
-    "269    F G H\n"
-    "260      G H\n"
-    "263        H\n"
-    ;
-
-
 TEST( day01, test_sample_data ) 
 {
     std::istringstream data_stream(sample_data_1);
@@ -47,7 +33,7 @@ TEST( day01, test_sample_data )
 
 TEST( day01, test_sample_data_part2 ) 
 {
-    std::istringstream data_stream(sample_data_2);
+    std::istringstream data_stream(sample_data_1);
     auto p = part2_solve(data_stream);
     EXPECT_EQ(5, p);
 }
@@ -71,7 +57,7 @@ TEST( day01, test_data_2 )
 
     auto p2 = part2_solve(datafile);
 
-    EXPECT_EQ(999999999, p2);
+    EXPECT_EQ(1262, p2);
 }
 
 }
