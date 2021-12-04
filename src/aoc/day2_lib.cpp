@@ -26,13 +26,13 @@ typedef enum {
 } Direction;
 
 std::map<std::string, Direction> DirectionName = {
-     {"HALT",HALT}
-    ,{"FORWARD", FORWARD}
-    ,{"BACK", BACK}
-    ,{"UP", UP}
-    ,{"DOWN", DOWN}
-    ,{"PORT", PORT}
-    ,{"STARBOARD", STARBOARD}
+     {"halt",HALT}
+    ,{"forward", FORWARD}
+    ,{"back", BACK}
+    ,{"up", UP}
+    ,{"down", DOWN}
+    ,{"port", PORT}
+    ,{"starboard", STARBOARD}
 };
 
 typedef struct NavCommand
@@ -52,6 +52,29 @@ typedef struct NavCommand
     int distance;
 } NavCommand;
 typedef std::vector<NavCommand> NavCommands;
+
+// std::ostream & operator<<(std::ostream &os, const NavCommands& ps);
+// std::ostream & operator<<(std::ostream &os, const NavCommand& p);
+
+// std::ostream & operator<<(std::ostream &os, const NavCommands& ns)
+// {
+//     for ( auto n : ns)
+//     {
+//         os << n << std::endl;
+//     }
+//     return os;
+// }
+
+// std::ostream & operator<<(std::ostream &os, const NavCommand& n)
+// {
+
+//     os << n.name
+//        << ":"
+//        << n.distance
+//        ;
+
+//     return os;
+// }
 
 
 
@@ -90,10 +113,10 @@ NavCommands parse_datastream(std::istream& data_stream)
 
     std::string line;
     for (;std::getline(data_stream, line);)
-    {   
+    {
         commands.push_back(parse_data_line(line));
     }
-    
+
     return commands;
 }
 
@@ -101,8 +124,32 @@ NavCommands parse_datastream(std::istream& data_stream)
 
 std::size_t day2lib::part1_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto commands = parse_datastream(data_stream);
+
+    // std::cout << commands << std::endl;
+
+    int vertical{0};
+    int horizontal{0};
+    for ( auto c : commands )
+    {
+        switch (c.direction) {
+        case Direction::FORWARD: horizontal += c.distance; break;
+        case Direction::BACK: horizontal -= c.distance; break;
+        case Direction::UP: vertical -= c.distance; break;
+        case Direction::DOWN: vertical += c.distance; break;
+
+        case Direction::PORT:
+        case Direction::STARBOARD:
+        case Direction::HALT:
+        default:
+            std::cout << "Not handled: ";
+            break;
+        }
+
+        // std::cout << c << ", " << vertical << ", " << horizontal << std::endl;
+    }
+
+    return vertical * horizontal;
 }
 
 std::size_t day2lib::part2_solve(std::istream& data_stream)
