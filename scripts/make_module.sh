@@ -13,6 +13,7 @@ DAY_NUMBER="${1:-999}"
 MODULE="${2:-"day"}${DAY_NUMBER}"
 
 MODULEUP=${MODULE^^}
+FOLDER="aoc"
 
 read -r -d '' LIB_HEADER <<-EOT
 #ifndef ${MODULEUP}_LIB_H
@@ -30,7 +31,7 @@ std::size_t part2_solve(std::istream& data_stream);
 EOT
 
 read -r -d '' LIB_CPP <<-EOT
-#include "${MODULE}_lib.h"
+#include "${FOLDER}/${MODULE}_lib.h"
 
 #include <iostream>
 #include <sstream>
@@ -93,8 +94,8 @@ int ${MODULE}(const std::string& filename);
 EOT
 
 read -r -d '' SRC_CPP <<-EOT
-#include "${MODULE}.h"
-#include "${MODULE}_lib.h"
+#include "${FOLDER}/${MODULE}.h"
+#include "${FOLDER}/${MODULE}_lib.h"
 #include <iostream>
 #include <fstream>
 
@@ -123,17 +124,17 @@ read -r -d '' TEST_HEADER <<-EOT
 
 namespace ${MODULE}test {
 
-bool ${MODULE}_test();
-
 }
 
 #endif
 EOT
 
 read -r -d '' TEST_CPP <<-EOT
+#include "gtest/gtest.h"
+
 #include "${MODULE}_test.h"
-#include "${MODULE}_lib.h"
-#include "test_runner.h"
+#include <${FOLDER}/${MODULE}_lib.h>
+
 #include <sstream>
 #include <fstream>
 #include <string>
@@ -149,78 +150,81 @@ std::string sample_data =
     ;
 
 
-bool test_sample_data()
-{
+TEST( ${MODULE}, test_sample_data ) {
     std::istringstream data_stream(sample_data);
     auto p = part1_solve(data_stream);
-    return 999999999 == p;
+    EXPECT_EQ(999999999, p);
 }
 
-bool test_sample_data_part2()
-{
+TEST( ${MODULE}, test_sample_data_part2 ) {
     std::istringstream data_stream(sample_data);
     auto p = part2_solve(data_stream);
-    return 999999999 == p;
+    EXPECT_EQ(999999999, p);
 }
 
-bool test_data()
-{
-    std::string data_file_name = "./data/day${DAY_NUMBER}_data.txt";
+TEST( ${MODULE}, test_data ) {
+    std::string data_file_name = "./data/${MODULE}_data.txt";
 
     std::ifstream datafile(data_file_name);
-    if(!datafile)
-    {
-        std::cout << "Error opening input file" << std::endl;
-        return false;
-    }
+    ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
+
     auto p1 = part1_solve(datafile);
 
     std::ifstream datafile2(data_file_name);
     auto p2 = part2_solve(datafile2);
 
-    return     (999999999 == p1)
-            && (999999999 == p2)
-           ;
+    EXPECT_EQ(999999999, p1);
+    EXPECT_EQ(999999999, p2);
 }
 
-
-}
-
-bool ${MODULE}test::${MODULE}_test()
-{
-   test_runner::Tests tests = {
-        {"test_sample_data", test_sample_data}
-        ,{"test_sample_data_part2", test_sample_data_part2}
-        ,{"test_data", test_data}
-    };
-
-    return test_runner::run_tests("${MODULE}_test", tests);
 }
 
 EOT
 
-echo "${LIB_HEADER}" > "./library/${MODULE}_lib.h"
-echo "${LIB_CPP}" > "./library/${MODULE}_lib.cpp"
-echo "${SRC_HEADER}" > "./src/${MODULE}.h"
-echo "${SRC_CPP}" > "./src/${MODULE}.cpp"
-echo "${TEST_HEADER}" > "./src_test/${MODULE}_test.h"
-echo "${TEST_CPP}" > "./src_test/${MODULE}_test.cpp"
+echo "${LIB_HEADER}" > "./include/${FOLDER}/${MODULE}_lib.h"
+echo "${LIB_CPP}" > "./src/${FOLDER}/${MODULE}_lib.cpp"
+echo "${SRC_HEADER}" > "./include/${FOLDER}/${MODULE}.h"
+echo "${SRC_CPP}" > "./src/${FOLDER}/${MODULE}.cpp"
+echo "${TEST_HEADER}" > "./tests/${MODULE}_test.h"
+echo "${TEST_CPP}" > "./tests/${MODULE}_test.cpp"
 
 
 INCLUDE_MARKER="//MAKEMODULE INCLUDE MARKER. DO NOT DELETE"
 LIST_MARKER="//MAKEMODULE LIST MARKER. DO NOT DELETE"
 
-INCLUDE_ITEM="\#include \"${MODULE}_test\.h\""
-LIST_ITEM=",{\"${MODULE}_test\", ${MODULE}test::${MODULE}_test}"
-
-# the goofiness with the $ and \\\n is to get a newline in the replacement text
-sed -E -i '' -e "s~${INCLUDE_MARKER}~${INCLUDE_ITEM}"$'\\\n'"&~g" ./src_test/test_main.cpp
-sed -E -i '' -e "s~${LIST_MARKER}~${LIST_ITEM}"$'\\\n'"        &~g"  ./src_test/test_main.cpp
-
 # ,{999, day02};
 DAY_MAP_ITEM=",{${DAY_NUMBER}, ${MODULE}}"
-MAIN_INCLUDE_ITEM="\#include \"${MODULE}\.h\""
+MAIN_INCLUDE_ITEM="\#include \"${FOLDER}/${MODULE}\.h\""
 
 
-sed -E -i '' -e "s~${INCLUDE_MARKER}~${MAIN_INCLUDE_ITEM}"$'\\\n'"&~g" ./src/main.cpp
-sed -E -i '' -e "s~${LIST_MARKER}~${DAY_MAP_ITEM}"$'\\\n'"    &~g"  ./src/main.cpp
+sed -E -i '' -e "s~${INCLUDE_MARKER}~${MAIN_INCLUDE_ITEM}"$'\\\n'"&~g" ./apps/main.cpp
+sed -E -i '' -e "s~${LIST_MARKER}~${DAY_MAP_ITEM}"$'\\\n'"    &~g"  ./apps/main.cpp
+
+
+# update cmake files
+HEADER_MARKER='set\(HEADER_LIST'
+HEADER_ITEMS=("\"\${PROJECT_SOURCE_DIR}/include/${FOLDER}/${MODULE}_lib\.h\"" \
+              "\"\${PROJECT_SOURCE_DIR}/include/${FOLDER}/${MODULE}\.h\"" \
+)
+
+SOURCE_MARKER='add_library\(aoc_library'
+SOURCE_ITEMS=( "\"\${PROJECT_SOURCE_DIR}/src/${FOLDER}/${MODULE}_lib\.cpp\"" \
+               "\"\${PROJECT_SOURCE_DIR}/src/${FOLDER}/${MODULE}\.cpp\"" \
+)
+
+TEST_MARKER='add_executable\(testaoc'
+TEST_ITEMS=( \
+    ${MODULE}_test.cpp \
+)
+
+for s in "${HEADER_ITEMS[@]}"; do
+    sed -E -i '' -e "s~${HEADER_MARKER}~&"$'\\\n'"${s}~g" ./src/CMakeLists.txt
+done
+
+for s in "${SOURCE_ITEMS[@]}"; do
+    sed -E -i '' -e "s~${SOURCE_MARKER}~&"$'\\\n'"${s}~g" ./src/CMakeLists.txt
+done
+
+for s in "${TEST_ITEMS[@]}"; do
+    sed -E -i '' -e "s~${TEST_MARKER}~&"$'\\\n'"${s}~g" ./tests/CMakeLists.txt
+done
