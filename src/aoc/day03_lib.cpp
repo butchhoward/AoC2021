@@ -6,9 +6,11 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <tuple>
 #include <algorithm>
 #include <numeric>
 #include <functional>
+#include <ranges>
 
 
 using namespace day03lib;
@@ -49,18 +51,73 @@ DiagnosticCodes parse_datastream(std::istream& data_stream)
         DiagnosticCode c;
         for ( auto s : line )
         {
-            bool bit{false};
-            bit = s == '1';
-            c.push_back(bit);
+            c.push_back(s == '1');
         }
-        // std::cout << diagnostic_code_to_string(c) << std::endl;
         codes.push_back( c );
     }
 
     return codes;
 }
 
+
+std::tuple<int, int> count_bits( const DiagnosticCodes& codes, size_t pos)
+{
+    int ones_count{0}, zeros_count{0};
+
+    for ( auto c : codes)
+    {
+        if (c[pos])
+        {
+            ++ones_count;
+        }
+        else
+        {
+            ++zeros_count;
+        }
+    }
+
+    return std::tuple<int,int>(ones_count, zeros_count);
 }
+
+DiagnosticCodes filter_codes(const DiagnosticCodes& codes, size_t pos, bool bit_value)
+{
+    auto f = codes | std::views::filter( [pos, bit_value](auto c)
+                                            { return c[pos] == bit_value; }
+                                       );
+    return DiagnosticCodes(f.begin(), f.end());
+}
+
+DiagnosticCode oxygen_rating(const DiagnosticCodes& cs)
+{
+    DiagnosticCodes codes(cs);
+    size_t pos{0};
+
+    while (codes.size() > 1)
+    {
+        auto [ones, zeros] = count_bits(codes, pos);
+        codes = filter_codes(codes, pos, ones >= zeros);
+        ++pos;
+    }
+
+    return codes[0];
+}
+
+DiagnosticCode c02_rating(const DiagnosticCodes& cs)
+{
+    DiagnosticCodes codes(cs);
+    size_t pos{0};
+
+    while (codes.size() > 1)
+    {
+        auto [ones, zeros] = count_bits(codes, pos);
+        codes = filter_codes(codes, pos, ones < zeros);
+        ++pos;
+    }
+
+    return codes[0];
+}
+
+} //namespace
 
 std::size_t day03lib::part1_solve(std::istream& data_stream)
 {
@@ -102,6 +159,10 @@ std::size_t day03lib::part1_solve(std::istream& data_stream)
 
 std::size_t day03lib::part2_solve(std::istream& data_stream)
 {
-    auto DiagnosticCodes = parse_datastream(data_stream);
-    return 0;
+    auto codes = parse_datastream(data_stream);
+
+    auto oxy = oxygen_rating(codes);
+    auto c02 = c02_rating(codes);
+
+    return diagnostic_code_to_int(oxy) * diagnostic_code_to_int(c02);
 }
