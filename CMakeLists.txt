@@ -1,5 +1,9 @@
 # Requires Cmake 3.20 now
 cmake_minimum_required(VERSION 3.17)
+
+# assumes the gcc g++-11 is installed
+# note that some versions of macos brew do NOT automatically put these in /usr/local/bin
+# check `brew --prefix` to see where it puts them and make links as needed
 set(CMAKE_CXX_COMPILER "/usr/local/bin/g++-11")
 
 # Project name and a few useful settings. Other commands can pick up the results
