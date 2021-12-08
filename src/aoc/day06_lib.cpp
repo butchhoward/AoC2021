@@ -95,14 +95,19 @@ Fishes update_spawn(Fishes& fishes)
 void model_spawn(Fishes& fishes, int days)
 {
 
+    std::cout << "MODEL" << std::endl;
+
     for (auto day=0; day < days; ++day)
     {
         Fishes new_fishes;
 
+        std::cout << "+" << std::flush;
         new_fishes = update_spawn(fishes);
 
         fishes.insert( fishes.end(), new_fishes.begin(), new_fishes.end());
+        std::cout << day << "(" << fishes.size() << ") ";
     }
+    std::cout << std::endl;
 
 }
 
@@ -111,15 +116,14 @@ void model_spawn(Fishes& fishes, int days)
 std::size_t day06lib::part1_solve(std::istream& data_stream, int days)
 {
     auto fishes = parse_datastream(data_stream);
-    std::cout << fishes << std::endl;
+    std::cout << "input size:" << fishes.size() << std::endl;
 
     model_spawn(fishes, days);
 
     return fishes.size();
 }
 
-std::size_t day06lib::part2_solve(std::istream& data_stream)
+std::size_t day06lib::part2_solve(std::istream& data_stream, int days)
 {
-    auto fishes = parse_datastream(data_stream);
-    return 0;
+    return part1_solve(data_stream, days);
 }

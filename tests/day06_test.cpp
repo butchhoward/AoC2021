@@ -28,20 +28,20 @@ TEST( day06, test_sample_data_part1_18 ) {
     EXPECT_EQ(26, p);
 }
 
-// TEST( day06, test_sample_data_part2 ) {
-//     std::istringstream data_stream(sample_data);
-//     auto p = part2_solve(data_stream);
-//     EXPECT_EQ(999999999, p);
-// }
+TEST( day06, test_sample_data_part2 ) {
+    std::istringstream data_stream(sample_data);
+    auto p = part2_solve(data_stream, 256);
+    EXPECT_EQ(26984457539, p);
+}
 
 TEST( day06, test_data_1 ) {
     std::string data_file_name = "../data/day06_data.txt";
     std::ifstream datafile(data_file_name);
     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
 
-    auto p1 = part1_solve(datafile);
+    auto p1 = part1_solve(datafile, 80);
 
-    EXPECT_EQ(999999999, p1);
+    EXPECT_EQ(362666, p1);
 }
 
 // TEST( day06, test_data_2 )
