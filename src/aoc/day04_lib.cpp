@@ -28,6 +28,7 @@ public:
                 return -1;
             return randos[next++];
         }
+
         std::vector<int> randos;
         size_t next;
     } RandomNumbers;
@@ -58,13 +59,15 @@ public:
         {
         }
 
-        void mark(int v)
+        bool mark(int v)
         {
             auto x = std::find_if(std::begin(spots), std::end(spots), [v](BoardSpot s){return s.value == v;});
             if ( x != std::end(spots) )
             {
                 x->mark();
+                return true;
             }
+            return false;
         }
 
         bool check() const
@@ -79,7 +82,7 @@ public:
 
             for (auto x=0; x < 5; ++x)
             {
-                BoardSpots winning_spots{
+                BoardSpots column_spots{
                      spots[x],
                      spots[x+5],
                      spots[x+10],
@@ -87,7 +90,7 @@ public:
                      spots[x+20]
                 };
 
-                if (std::all_of(std::begin(winning_spots), std::end(winning_spots), [](BoardSpot s){return s.marked;}))
+                if (std::all_of(std::begin(column_spots), std::end(column_spots), [](BoardSpot s){return s.marked;}))
                 {
                     return true;
                 }
@@ -135,29 +138,40 @@ public:
         boards.push_back(board);
     }
 
+    int playable_boards() const
+    {
+        return std::accumulate(boards.begin(), boards.end(), 0,
+                                        [](auto t, const Board& b){ return b.check() ? t : t+1;}
+                                    );
+
+    }
     std::tuple<bool, int, Board> play_round()
     {
         auto last_rando = randos.get_next();
+        Board winning_board;
+        bool has_winner{false};
+
         if (last_rando == -1)
         {
-            std::cout << "BORK" << std::endl;
             return std::tuple<bool, int, Board>(false, last_rando, Board());
         }
 
         for (auto &b : boards)
         {
-            b.mark(last_rando);
+            if (b.check()) //ignore boards that are already complete
+                continue;
 
-            if (b.check())
+            if ( b.mark(last_rando) && b.check())
             {
-                return std::tuple<bool, int, Board>(true, last_rando, b);
+                has_winner = true;
+                winning_board = b;
             }
         }
 
-        return std::tuple<bool, int, Board>(false, last_rando, Board());
+        return std::tuple<bool, int, Board>(has_winner, last_rando, winning_board);
     }
 
-// protected:
+protected:
     RandomNumbers randos;
     Boards boards;
 };
@@ -246,6 +260,7 @@ Bingo::Board parse_board(std::istream& data_stream)
 
 }
 
+
 Bingo parse_datastream(std::istream& data_stream)
 {
     Bingo bingo;
@@ -273,10 +288,11 @@ Bingo parse_datastream(std::istream& data_stream)
     }
 
     return bingo;
-;
 }
 
+
 }
+
 
 std::size_t day04lib::part1_solve(std::istream& data_stream)
 {
@@ -293,16 +309,6 @@ std::size_t day04lib::part1_solve(std::istream& data_stream)
             break;
     } while(!winner);
 
-    // std::cout << std::endl;
-    // for (auto s : winning_board.spots) { std::cout << s.value << " "; }
-    // std::cout << std::endl;
-
-    // std::cout << last_rando << " * "
-    //             << std::accumulate(winning_board.spots.begin(), winning_board.spots.end(), 0,
-    //                                         [](int t, const Bingo::BoardSpot& s){ return s.marked ? t : t + s.value;}
-    //                                     )
-    //             << std::endl;
-
     return last_rando * std::accumulate(winning_board.spots.begin(), winning_board.spots.end(), 0,
                                             [](int t, const Bingo::BoardSpot& s){ return s.marked ? t : t + s.value;}
                                         );
@@ -310,6 +316,32 @@ std::size_t day04lib::part1_solve(std::istream& data_stream)
 
 std::size_t day04lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto bingo = parse_datastream(data_stream);
+
+    Bingo::Board winning_board;
+    int last_rando{-1};
+
+    for(;;)
+    {
+        auto [w, r, b] = bingo.play_round();
+        if (r == -1)
+            break;
+
+        if (w)
+        {
+            winning_board = b;
+            last_rando = r;
+        }
+
+        if (bingo.playable_boards() == 0)
+        {
+            break; //all boards complete
+        }
+
+    }
+
+    return last_rando * std::accumulate(winning_board.spots.begin(), winning_board.spots.end(), 0,
+                                            [](int t, const Bingo::BoardSpot& s){ return s.marked ? t : t + s.value;}
+                                        );
+
 }
