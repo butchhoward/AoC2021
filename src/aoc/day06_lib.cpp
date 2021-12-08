@@ -1,4 +1,5 @@
 #include "aoc/day06_lib.h"
+#include <library/parser_helpers.h>
 
 #include <iostream>
 #include <sstream>
@@ -50,24 +51,14 @@ std::ostream & operator<<(std::ostream &os, const FishDays& days)
 
 FishDays parse_datastream(std::istream& data_stream)
 {
+
+    auto fish_timers = parser_helpers::parse_comma_ints(data_stream);
+
     FishDays fishdays(9);
 
-    std::string line;
-    for (;std::getline(data_stream, line);)
+    for (auto fish_timer : fish_timers)
     {
-        std::istringstream timers(line);
-        for(;;)
-        {
-            if (timers.eof())
-            {
-                break;
-            }
-            int fish_timer;
-            timers >> fish_timer;
-            timers.ignore(std::numeric_limits<std::streamsize>::max(), ',');
-
-            fishdays[fish_timer].fish++;
-        }
+        fishdays[fish_timer].fish++;
     }
 
     return fishdays;

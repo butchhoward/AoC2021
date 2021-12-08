@@ -43,6 +43,7 @@ target_compile_features(aoc_library PUBLIC cxx_std_20)
 add_library(aoc_core
         "${PROJECT_SOURCE_DIR}/src/library/dummy.cpp"
         "${PROJECT_SOURCE_DIR}/src/library/chrono_helpers.cpp"
+        "${PROJECT_SOURCE_DIR}/src/library/parser_helpers.cpp"
             ${HEADER_LIST})
 target_include_directories(aoc_core PUBLIC ../include)
 target_compile_features(aoc_core PUBLIC cxx_std_20)

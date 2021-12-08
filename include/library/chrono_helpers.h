@@ -1,5 +1,5 @@
-#ifndef DAY01_LIB_H
-#define DAY01_LIB_H
+#ifndef CHRONO_HELPERS_H
+#define CHRONO_HELPERS_H
 #include <chrono>
 #include <string>
 

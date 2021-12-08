@@ -28,6 +28,7 @@ target_link_libraries(testaoc
                       PRIVATE
                       gtest_main
                       aoc_library
+                      aoc_core
                     )
 
 add_test(NAME testaoctest COMMAND testaoc)
