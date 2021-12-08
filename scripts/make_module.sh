@@ -51,6 +51,21 @@ namespace {
 typedef int Thing;
 typedef std::vector<Thing> Things;
 
+std::ostream & operator<<(std::ostream &os, const Thing& thing)
+{
+    return os;
+}
+
+#pragma GCC diagnostic ignored "-Wunused-function"
+std::ostream & operator<<(std::ostream &os, const Things& things)
+{
+    for (auto thing : things)
+    {
+        os << thing << std::endl;
+    }
+    return os;
+}
+
 Things parse_datastream(std::istream& data_stream)
 {
     Things data;
@@ -69,6 +84,7 @@ Things parse_datastream(std::istream& data_stream)
 std::size_t ${MODULE}lib::part1_solve(std::istream& data_stream)
 {
     auto things = parse_datastream(data_stream);
+    std::cout << things << std::endl;
     return 0;
 }
 
