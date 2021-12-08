@@ -29,7 +29,7 @@ TEST( day07, test_data_1 ) {
 
     auto p1 = part1_solve(datafile);
 
-    EXPECT_EQ(999999999, p1);
+    EXPECT_EQ(356958, p1);
 }
 
 // TEST( day07, test_sample_data_part2 ) {
