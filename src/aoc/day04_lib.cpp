@@ -17,17 +17,30 @@ namespace {
 class Bingo
 {
 public:
-    typedef std::vector<int> RandomNumbers;
+    typedef struct RandomNumbers {
+        RandomNumbers(): next(0)
+        {
+        }
+
+        int get_next()
+        {
+            if (next >= randos.size())
+                return -1;
+            return randos[next++];
+        }
+        std::vector<int> randos;
+        size_t next;
+    } RandomNumbers;
 
     typedef struct BoardSpot {
-        BoardSpot() : 
-            value(0), marked(false)
-        {            
+        BoardSpot() :
+            value(-1), marked(false)
+        {
         }
         BoardSpot(int v) :
             value(v), marked(false)
         {
-            
+
         }
         void mark()
         {
@@ -41,27 +54,55 @@ public:
     typedef std::vector<BoardSpot> BoardSpots;
 
     typedef struct Board {
-        Board() :
-            spots(5*5)
+        Board()
         {
         }
 
         void mark(int v)
         {
-            (void)v;
+            auto x = std::find_if(std::begin(spots), std::end(spots), [v](BoardSpot s){return s.value == v;});
+            if ( x != std::end(spots) )
+            {
+                x->mark();
+            }
         }
 
-        std::tuple<bool, BoardSpots> check() const
+        bool check() const
         {
-            bool winner{false};
-            BoardSpots spots;
+            for (auto x = std::begin(spots); x != std::end(spots); x += 5)
+            {
+                if (std::all_of(x, x + 5, [](BoardSpot s){return s.marked;}))
+                {
+                    return true;
+                }
+            }
 
-            return std::tuple<bool, BoardSpots>(winner, spots);
+            for (auto x=0; x < 5; ++x)
+            {
+                BoardSpots winning_spots{
+                     spots[x],
+                     spots[x+5],
+                     spots[x+10],
+                     spots[x+15],
+                     spots[x+20]
+                };
+
+                if (std::all_of(std::begin(winning_spots), std::end(winning_spots), [](BoardSpot s){return s.marked;}))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         bool is_ready() const
         {
-            return std::none_of(spots.cbegin(), spots.cend(), [](BoardSpot s){ return s.value == 0; });
+            return spots.size() == 5*5 &&
+                   std::none_of(spots.cbegin(), spots.cend(),
+                                    [](BoardSpot s){ return s.value == -1; }
+                               )
+                    ;
         }
 
         std::vector<BoardSpot> spots;
@@ -84,26 +125,69 @@ public:
     {
     }
 
+    void set_randos(RandomNumbers r)
+    {
+        randos = r;
+    }
+
     void add_board(Board board)
     {
         boards.push_back(board);
     }
 
-    std::tuple<bool, int, BoardSpots> play_round()
+    std::tuple<bool, int, Board> play_round()
     {
-        bool has_winner{false};
-        BoardSpots winning_spots;
-        int last_rando{0};
+        auto last_rando = randos.get_next();
+        if (last_rando == -1)
+        {
+            std::cout << "BORK" << std::endl;
+            return std::tuple<bool, int, Board>(false, last_rando, Board());
+        }
 
-        has_winner = true;
-        return std::tuple<bool, int, BoardSpots>(has_winner, last_rando, winning_spots);
+        for (auto &b : boards)
+        {
+            b.mark(last_rando);
+
+            if (b.check())
+            {
+                return std::tuple<bool, int, Board>(true, last_rando, b);
+            }
+        }
+
+        return std::tuple<bool, int, Board>(false, last_rando, Board());
     }
 
-protected:
+// protected:
     RandomNumbers randos;
-    Boards boards; 
-    Board winner;
+    Boards boards;
 };
+
+// std::ostream & operator<<(std::ostream &os, const Bingo& bingo)
+// {
+//     os << "Randos: ";
+//     for ( auto r : bingo.randos.randos)
+//     {
+//         os << r << ",";
+//     }
+//     os << std::endl;
+
+//     os << std::endl;
+
+//     for (auto b : bingo.boards)
+//     {
+//         for (auto s : b.spots)
+//         {
+//             os << s.value;
+//             if (s.marked)
+//                 os << "!";
+//             os << " ";
+//         }
+//         os << std::endl;
+//     }
+//     os << std::endl;
+//     return os;
+// }
+
 
 Bingo::RandomNumbers parse_randos(const std::string& line)
 {
@@ -123,7 +207,7 @@ Bingo::RandomNumbers parse_randos(const std::string& line)
 
         stream >> d >> c;
 
-        randos.push_back(d);
+        randos.randos.push_back(d);
     }
 
     return randos;
@@ -134,44 +218,32 @@ Bingo::Board parse_board(std::istream& data_stream)
     Bingo::Board board;
     std::string line;
 
-    for(;;)
+    for (auto i = 0; i < 5; ++i)
     {
-        while(std::getline(data_stream, line) && ! line.empty() )
+        std::getline(data_stream, line);
+        if (data_stream.eof())
         {
+            break;
+        }
+
+        std::istringstream row_stream(line);
+        for (auto v = 0; v < 5; ++v)
+        {
+            int value;
+            row_stream >> value;
+            Bingo::BoardSpot spot(value);
+            board.spots.push_back(spot);
         }
 
         if (data_stream.eof())
         {
             break;
         }
-
-        for (auto i = 0; i < 5; ++i)
-        {
-            std::getline(data_stream, line);
-            if (data_stream.eof())
-            {
-                break;
-            }
-
-            std::istringstream row_stream(line);
-            for (auto v = 0; v < 5; ++v)
-            {
-                int value;
-                row_stream >> value;
-                Bingo::BoardSpot spot(value);
-                board.spots.push_back(spot);
-            }
-
-            if (data_stream.eof())
-            {
-                break;
-            }
-        }
     }
-
+    std::getline(data_stream, line); //eat the blank
 
     return board;
-    
+
 }
 
 Bingo parse_datastream(std::istream& data_stream)
@@ -182,7 +254,10 @@ Bingo parse_datastream(std::istream& data_stream)
 
     std::getline(data_stream, line);
     auto randos = parse_randos(line);
-    
+    bingo.set_randos(randos);
+
+    std::getline(data_stream, line);    //eat the blank
+
     for(;;)
     {
         auto board = parse_board(data_stream);
@@ -198,6 +273,7 @@ Bingo parse_datastream(std::istream& data_stream)
     }
 
     return bingo;
+;
 }
 
 }
@@ -205,17 +281,30 @@ Bingo parse_datastream(std::istream& data_stream)
 std::size_t day04lib::part1_solve(std::istream& data_stream)
 {
     auto bingo = parse_datastream(data_stream);
-    Bingo::BoardSpots winning_spots;
-    int last_rando{0};
+
+    Bingo::Board winning_board;
     bool winner{false};
-    do 
+    int last_rando{-1};
+
+    do
     {
-        auto [winner, last_rando, winning_spots] = bingo.play_round();
+        std::tie(winner, last_rando, winning_board) = bingo.play_round();
+        if (last_rando == -1)
+            break;
     } while(!winner);
 
+    // std::cout << std::endl;
+    // for (auto s : winning_board.spots) { std::cout << s.value << " "; }
+    // std::cout << std::endl;
 
-    return last_rando * std::accumulate(winning_spots.begin(), winning_spots.end(), 0, 
-                                            [](int t, const Bingo::BoardSpot& s){ return t + s.value;}
+    // std::cout << last_rando << " * "
+    //             << std::accumulate(winning_board.spots.begin(), winning_board.spots.end(), 0,
+    //                                         [](int t, const Bingo::BoardSpot& s){ return s.marked ? t : t + s.value;}
+    //                                     )
+    //             << std::endl;
+
+    return last_rando * std::accumulate(winning_board.spots.begin(), winning_board.spots.end(), 0,
+                                            [](int t, const Bingo::BoardSpot& s){ return s.marked ? t : t + s.value;}
                                         );
 }
 

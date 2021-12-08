@@ -32,6 +32,7 @@ std::string sample_data =
     "18  8 23 26 20\n"
     "22 11 13  6  5\n"
     " 2  0 12  3  7\n"
+    "\n"
 ;
 
 TEST( day04, test_sample_data ) {
