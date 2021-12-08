@@ -56,6 +56,7 @@ typedef std::vector<Thing> Things;
 
 std::ostream & operator<<(std::ostream &os, const Thing& thing)
 {
+    os << thing.value;
     return os;
 }
 
@@ -175,12 +176,6 @@ TEST( ${MODULE}, test_sample_data ) {
     EXPECT_EQ(999999999, p);
 }
 
-TEST( ${MODULE}, test_sample_data_part2 ) {
-    std::istringstream data_stream(sample_data);
-    auto p = part2_solve(data_stream);
-    EXPECT_EQ(999999999, p);
-}
-
 TEST( ${MODULE}, test_data_1 ) {
     std::string data_file_name = "../data/${MODULE}_data.txt";
     std::ifstream datafile(data_file_name);
@@ -189,6 +184,12 @@ TEST( ${MODULE}, test_data_1 ) {
     auto p1 = part1_solve(datafile);
 
     EXPECT_EQ(999999999, p1);
+}
+
+TEST( ${MODULE}, test_sample_data_part2 ) {
+    std::istringstream data_stream(sample_data);
+    auto p = part2_solve(data_stream);
+    EXPECT_EQ(999999999, p);
 }
 
 TEST( ${MODULE}, test_data_2 )
