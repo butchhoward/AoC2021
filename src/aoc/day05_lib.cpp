@@ -89,7 +89,6 @@ std::ostream & operator<<(std::ostream &os, const Grid& grid)
 
 Lines parse_datastream(std::istream& data_stream)
 {
-
     Lines data;
 
     std::string input_line;
@@ -141,26 +140,42 @@ Grid filter_grid_points(const Grid& grid, int at_least)
 
 void update_grid(Grid& grid, const Lines& lines)
 {
+    auto update_point = [&grid](Point p)
+    {
+        grid.try_emplace(p, 0);
+        int counter = grid[p] + 1;
+        grid.insert_or_assign(p, counter);
+    };
+
     for (auto line : lines)
     {
-        int x1 = std::min(line.p1.x, line.p2.x);
-        int x2 = std::max(line.p1.x, line.p2.x);
-        int y1 = std::min(line.p1.y, line.p2.y);
-        int y2 = std::max(line.p1.y, line.p2.y);
-
-        for (auto x=x1; x <= x2; ++x)
+        if ( abs(line.p1.x-line.p2.x) == abs(line.p1.y-line.p2.y))
         {
-            for (auto y=y1; y <= y2; ++y )
-            {
-                Point p(x,y);
-                int counter{0};
-                if (grid.contains(p))
-                {
-                    counter = grid[p];
-                }
-                ++counter;
+            int x_inc = line.p1.x <= line.p2.x ? 1 : -1;
+            int y_inc = line.p1.y <= line.p2.y ? 1 : -1;
 
-                grid.insert_or_assign(p, counter);
+            // 45 degree line
+            for (auto x=line.p1.x, y=line.p1.y, steps=0;
+                    steps <= abs(line.p1.x-line.p2.x);
+                    x+=x_inc, y+=y_inc, ++steps
+                )
+            {
+                update_point(Point(x,y));
+            }
+        }
+        else
+        {
+            int x1 = std::min(line.p1.x, line.p2.x);
+            int x2 = std::max(line.p1.x, line.p2.x);
+            int y1 = std::min(line.p1.y, line.p2.y);
+            int y2 = std::max(line.p1.y, line.p2.y);
+
+            for (auto x=x1; x <= x2; ++x)
+            {
+                for (auto y=y1; y <= y2; ++y )
+                {
+                    update_point(Point(x,y));
+                }
             }
         }
     }
@@ -185,6 +200,12 @@ std::size_t day05lib::part1_solve(std::istream& data_stream)
 
 std::size_t day05lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto lines = parse_datastream(data_stream);
+
+    Grid grid;
+    update_grid(grid, lines);
+
+    auto filtered_grid = filter_grid_points(grid, 2);
+
+    return filtered_grid.size();
 }
