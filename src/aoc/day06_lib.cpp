@@ -14,40 +14,43 @@ using namespace day06lib;
 
 namespace {
 
-typedef struct Fish
+typedef unsigned long long FishCounter;
+
+typedef struct FishDay
 {
-    Fish() : timer(-1)
+    FishDay() : fish(0)
     {
     }
-    Fish(int d) : timer(d)
+    FishDay(FishCounter f) : fish(f)
     {
     }
 
-    int timer;
-} Fish;
+    FishCounter fish;
+} FishDay;
 
-typedef std::vector<Fish> Fishes;
+typedef std::vector<FishDay> FishDays;
 
-std::ostream & operator<<(std::ostream &os, const Fish& fish)
+std::ostream & operator<<(std::ostream &os, const FishDay& day)
 {
-    os << fish.timer;
+    os << day.fish;
     return os;
 }
 
 #pragma GCC diagnostic ignored "-Wunused-function"
-std::ostream & operator<<(std::ostream &os, const Fishes& fishes)
+std::ostream & operator<<(std::ostream &os, const FishDays& days)
 {
-    for (auto fish : fishes)
+    int counter{0};
+    for (auto day : days)
     {
-        os << fish << ",";
+        os << counter++ << "(" << day << ")" << " ";
     }
     os << std::endl;
     return os;
 }
 
-Fishes parse_datastream(std::istream& data_stream)
+FishDays parse_datastream(std::istream& data_stream)
 {
-    Fishes data;
+    FishDays fishdays(9);
 
     std::string line;
     for (;std::getline(data_stream, line);)
@@ -59,68 +62,60 @@ Fishes parse_datastream(std::istream& data_stream)
             {
                 break;
             }
-            Fish fish;
-            timers >> fish.timer;
+            int fish_timer;
+            timers >> fish_timer;
             timers.ignore(std::numeric_limits<std::streamsize>::max(), ',');
-            data.push_back(fish);
+
+            fishdays[fish_timer].fish++;
         }
     }
 
-    return data;
+    return fishdays;
 }
 
-Fishes update_spawn(Fishes& fishes)
+FishDays update_spawn(const FishDays& fishdays)
 {
-    Fishes new_fishes;
-    const int default_timer{6};
-    const int new_fish_bonus{2};
+    FishDays updated_fishdays(fishdays);
+    const size_t after_spawn_bucket = 6;
+    const size_t new_fish_bucket = 8;
 
-    for (auto &fish : fishes)
+    auto new_fish = updated_fishdays[0].fish;
+
+    for(size_t bucket=0; bucket < updated_fishdays.size()-1; ++bucket )
     {
-        if (fish.timer == 0)
-        {
-            fish.timer = 6;
-            new_fishes.push_back( Fish(default_timer + new_fish_bonus) );
-        }
-        else
-        {
-            --fish.timer;
-        }
+        updated_fishdays[bucket].fish = updated_fishdays[bucket+1].fish;
     }
+    updated_fishdays[new_fish_bucket].fish = new_fish;
+    updated_fishdays[after_spawn_bucket].fish = updated_fishdays[after_spawn_bucket].fish + new_fish;
 
-    return new_fishes;
+    return updated_fishdays;
 
 }
 
-void model_spawn(Fishes& fishes, int days)
+FishDays model_spawn(const FishDays& initial_fishdays, int days)
 {
 
-    std::cout << "MODEL" << std::endl;
+    FishDays fishdays(initial_fishdays);
 
     for (auto day=0; day < days; ++day)
     {
-        Fishes new_fishes;
-
-        std::cout << "+" << std::flush;
-        new_fishes = update_spawn(fishes);
-
-        fishes.insert( fishes.end(), new_fishes.begin(), new_fishes.end());
-        std::cout << day << "(" << fishes.size() << ") ";
+        fishdays = update_spawn(fishdays);
     }
-    std::cout << std::endl;
 
+    return fishdays;
 }
 
 }
 
 std::size_t day06lib::part1_solve(std::istream& data_stream, int days)
 {
-    auto fishes = parse_datastream(data_stream);
-    std::cout << "input size:" << fishes.size() << std::endl;
+    auto fishdays = parse_datastream(data_stream);
 
-    model_spawn(fishes, days);
+    fishdays = model_spawn(fishdays, days);
 
-    return fishes.size();
+    return std::accumulate(fishdays.begin(), fishdays.end(), (FishCounter)0,
+                                        [](auto t, const FishDay& d){ return t + d.fish;}
+                                    );
 }
 
 std::size_t day06lib::part2_solve(std::istream& data_stream, int days)

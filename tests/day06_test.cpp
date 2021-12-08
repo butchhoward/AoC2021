@@ -44,15 +44,15 @@ TEST( day06, test_data_1 ) {
     EXPECT_EQ(362666, p1);
 }
 
-// TEST( day06, test_data_2 )
-// {
-//     std::string data_file_name = "../data/day06_data.txt";
-//     std::ifstream datafile(data_file_name);
-//     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
+TEST( day06, test_data_2 )
+{
+    std::string data_file_name = "../data/day06_data.txt";
+    std::ifstream datafile(data_file_name);
+    ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
 
-//     auto p2 = part2_solve(datafile);
+    auto p2 = part2_solve(datafile, 256);
 
-//     EXPECT_EQ(999999999, p2);
-// }
+    EXPECT_EQ(1640526601595, p2);
+}
 
 }
