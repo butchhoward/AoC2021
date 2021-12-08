@@ -48,7 +48,10 @@ using namespace ${MODULE}lib;
 
 namespace {
 
-typedef int Thing;
+typedef struct Thing
+{
+    int value;
+} Thing;
 typedef std::vector<Thing> Things;
 
 std::ostream & operator<<(std::ostream &os, const Thing& thing)
