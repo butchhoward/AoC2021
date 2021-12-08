@@ -26,6 +26,7 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
 
   add_compile_options(-Wall -Wextra -Wpedantic -Werror)
   add_compile_options(-g -O0)
+  add_compile_options(-fcompare-debug-second)
 
   # Let's nicely support folders in IDEs
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
