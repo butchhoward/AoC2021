@@ -2,6 +2,8 @@
 # show up in IDEs unless they are listed in add_library.
 
 set(HEADER_LIST
+"${PROJECT_SOURCE_DIR}/include/aoc/day08.h"
+"${PROJECT_SOURCE_DIR}/include/aoc/day08_lib.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day07.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day07_lib.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day06.h"
@@ -21,6 +23,8 @@ set(HEADER_LIST
 # These can be multiple libraries built here
 # Just add sets of these three commands
 add_library(aoc_library
+"${PROJECT_SOURCE_DIR}/src/aoc/day08.cpp"
+"${PROJECT_SOURCE_DIR}/src/aoc/day08_lib.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day07.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day07_lib.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day06.cpp"
