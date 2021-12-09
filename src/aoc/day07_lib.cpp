@@ -61,7 +61,29 @@ size_t max_position(const CrabPositions& crab_positions)
     return the_max;
 }
 
-size_t cost_to_move_all(const CrabPositions& crab_positions, size_t pos)
+typedef size_t(*CrabEnergyFunction)(const CrabPositions& crab_positions, size_t pos);
+
+size_t cost_to_move_all_increasing(const CrabPositions& crab_positions, size_t pos)
+{
+    auto move_cost = [](size_t from, size_t to)
+    {
+        size_t c{0};
+        for (auto x=std::min(from,to); x <= std::max(from,to); ++x)
+        {
+            c += abs(x-to);
+        }
+        return c;
+    };
+
+    return std::accumulate(crab_positions.begin(), crab_positions.end(), (size_t)0,
+                            [pos,move_cost](auto t, const auto p)
+                            {
+                                return t + move_cost(p.first, pos) * p.second;
+                            }
+                        );
+}
+
+size_t cost_to_move_all_const(const CrabPositions& crab_positions, size_t pos)
 {
     return std::accumulate(crab_positions.begin(), crab_positions.end(), (size_t)0,
                             [pos](auto t, const auto p)
@@ -71,7 +93,7 @@ size_t cost_to_move_all(const CrabPositions& crab_positions, size_t pos)
                         );
 }
 
-size_t minimum_energy_move(const CrabPositions& crab_positions)
+size_t minimum_energy_move(const CrabPositions& crab_positions, CrabEnergyFunction energy_function)
 {
     auto max_pos = max_position(crab_positions);
 
@@ -79,11 +101,10 @@ size_t minimum_energy_move(const CrabPositions& crab_positions)
 
     for (size_t pos=0; pos<=max_pos; ++pos)
     {
-        min_energy = std::min(min_energy, cost_to_move_all(crab_positions, pos));
+        min_energy = std::min(min_energy, energy_function(crab_positions, pos));
     }
 
     return min_energy;
-
 }
 
 }
@@ -91,12 +112,11 @@ size_t minimum_energy_move(const CrabPositions& crab_positions)
 std::size_t day07lib::part1_solve(std::istream& data_stream)
 {
     auto crab_positions = parse_datastream(data_stream);
-
-    return minimum_energy_move(crab_positions);
+    return minimum_energy_move(crab_positions, cost_to_move_all_const);
 }
 
 std::size_t day07lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
-    return 0;
+    auto crab_positions = parse_datastream(data_stream);
+    return minimum_energy_move(crab_positions, cost_to_move_all_increasing);
 }
