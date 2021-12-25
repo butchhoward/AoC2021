@@ -18,8 +18,12 @@ set(HEADER_LIST
 "${PROJECT_SOURCE_DIR}/include/aoc/day03_lib.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day02.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day02_lib.h"
-    "${PROJECT_SOURCE_DIR}/include/aoc/day01_lib.h"
-    "${PROJECT_SOURCE_DIR}/include/aoc/day01.h"
+"${PROJECT_SOURCE_DIR}/include/aoc/day01_lib.h"
+"${PROJECT_SOURCE_DIR}/include/aoc/day01.h"
+"${PROJECT_SOURCE_DIR}/include/library/chrono_helpers.h"
+"${PROJECT_SOURCE_DIR}/include/library/parser_helpers.h"
+"${PROJECT_SOURCE_DIR}/include/library/points.h"
+
 )
 
 # These can be multiple libraries built here
@@ -41,8 +45,8 @@ add_library(aoc_library
 "${PROJECT_SOURCE_DIR}/src/aoc/day03_lib.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day02.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day02_lib.cpp"
-            "${PROJECT_SOURCE_DIR}/src/aoc/day01_lib.cpp"
-            "${PROJECT_SOURCE_DIR}/src/aoc/day01.cpp"
+"${PROJECT_SOURCE_DIR}/src/aoc/day01_lib.cpp"
+"${PROJECT_SOURCE_DIR}/src/aoc/day01.cpp"
             ${HEADER_LIST})
 target_include_directories(aoc_library PUBLIC ../include)
 target_compile_features(aoc_library PUBLIC cxx_std_20)
@@ -52,6 +56,7 @@ add_library(aoc_core
         "${PROJECT_SOURCE_DIR}/src/library/dummy.cpp"
         "${PROJECT_SOURCE_DIR}/src/library/chrono_helpers.cpp"
         "${PROJECT_SOURCE_DIR}/src/library/parser_helpers.cpp"
+        "${PROJECT_SOURCE_DIR}/src/library/points.cpp"
             ${HEADER_LIST})
 target_include_directories(aoc_core PUBLIC ../include)
 target_compile_features(aoc_core PUBLIC cxx_std_20)

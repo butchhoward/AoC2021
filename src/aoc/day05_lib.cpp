@@ -1,4 +1,5 @@
 #include "aoc/day05_lib.h"
+#include "library/points.h"
 
 #include <iostream>
 #include <sstream>
@@ -15,60 +16,10 @@ using namespace day05lib;
 
 namespace {
 
-typedef struct Point {
-    int x;
-    int y;
-} Point;
 
-inline bool operator==(const Point& lhs, const Point& rhs)
-{
-    return lhs.x == rhs.x &&
-           lhs.y == rhs.y;
-}
-inline bool operator<(const Point& lhs, const Point& rhs)
-{
-    return lhs.x < rhs.x ||
-            (lhs.x == rhs.x && lhs.y < rhs.y);
-}
-
-typedef struct Line {
-    Point p1;
-    Point p2;
-} Line;
-
-typedef std::vector<Line> Lines;
 
 typedef std::map<Point, int> Grid;
 
-std::ostream & operator<<(std::ostream &os, const Point& point)
-{
-    os << "("
-       << point.x
-       << ","
-       << point.y
-       << ")"
-       ;
-    return os;
-}
-std::ostream & operator<<(std::ostream &os, const Line& line)
-{
-    os << line.p1
-       << " -> "
-       << line.p2
-       ;
-
-    return os;
-}
-
-#pragma GCC diagnostic ignored "-Wunused-function"
-std::ostream & operator<<(std::ostream &os, const Lines& lines)
-{
-    for (auto line : lines)
-    {
-        os << line << std::endl;
-    }
-    return os;
-}
 
 typedef std::map<Point, int> Grid;
 

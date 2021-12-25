@@ -1,5 +1,5 @@
-#ifndef CHRONO_HELPERS_H
-#define CHRONO_HELPERS_H
+#ifndef CHRONO_HELPERS_H_
+#define CHRONO_HELPERS_H_
 #include <chrono>
 #include <string>
 
