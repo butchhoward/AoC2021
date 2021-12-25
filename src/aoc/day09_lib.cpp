@@ -1,4 +1,5 @@
 #include "aoc/day09_lib.h"
+#include "library/points.h"
 
 #include <iostream>
 #include <sstream>
@@ -28,6 +29,26 @@ std::ostream & day09lib::operator<<(std::ostream &os, const HeightMap& map)
     for (auto row : map)
     {
         os << row << std::endl;
+    }
+    return os;
+}
+
+
+std::ostream & day09lib::operator<<(std::ostream &os, const Basin& basin)
+{
+    for (auto p : basin)
+    {
+        os << p;
+    }
+    return os;
+}
+
+#pragma GCC diagnostic ignored "-Wunused-function"
+std::ostream & day09lib::operator<<(std::ostream &os, const Basins& basins)
+{
+    for (auto b : basins)
+    {
+        os << b << std::endl;
     }
     return os;
 }
@@ -120,6 +141,15 @@ size_t total_risk(const HeightRow& lowpoints)
 
 }
 
+HeightMap find_basins(const HeightMap& map)
+{
+    HeightMap basins;
+    (void)map;
+
+    std::cout << "Basins: " << basins << std::endl;
+    return basins;
+
+}
 
 
 }
@@ -133,6 +163,11 @@ std::size_t day09lib::part1_solve(std::istream& data_stream)
 
 std::size_t day09lib::part2_solve(std::istream& data_stream)
 {
-    auto things = parse_datastream(data_stream);
+    auto map = parse_datastream(data_stream);
+    auto basins = find_basins(map);
+    //sort basins
+    //take largest 3
+    //return product of sizes
+
     return 0;
 }

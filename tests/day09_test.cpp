@@ -36,11 +36,11 @@ TEST( day09, test_data_1 ) {
     EXPECT_EQ(516, p1);
 }
 
-// TEST( day09, test_sample_data_part2 ) {
-//     std::istringstream data_stream(sample_data);
-//     auto p = part2_solve(data_stream);
-//     EXPECT_EQ(999999999, p);
-// }
+TEST( day09, test_sample_data_part2 ) {
+    std::istringstream data_stream(sample_data);
+    auto p = part2_solve(data_stream);
+    EXPECT_EQ(1134, p);
+}
 
 // TEST( day09, test_data_2 )
 // {
