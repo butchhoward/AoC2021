@@ -16,6 +16,16 @@ std::ostream & operator<<(std::ostream &os, const Point& point)
     return os;
 }
 
+#pragma GCC diagnostic ignored "-Wunused-function"
+std::ostream & operator<<(std::ostream &os, const Points& points)
+{
+    for (const auto& p : points)
+    {
+        os << p << " ";
+    }
+    return os;
+}
+
 std::ostream & operator<<(std::ostream &os, const Line& line)
 {
     os << line.p1

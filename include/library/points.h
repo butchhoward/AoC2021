@@ -8,6 +8,7 @@ typedef struct Point {
     int x;
     int y;
 } Point;
+typedef std::vector<Point> Points;
 
 inline bool operator==(const Point& lhs, const Point& rhs)
 {
@@ -27,6 +28,7 @@ typedef struct Line {
 typedef std::vector<Line> Lines;
 
 std::ostream & operator<<(std::ostream &os, const Point& point);
+std::ostream & operator<<(std::ostream &os, const Points& points);
 std::ostream & operator<<(std::ostream &os, const Line& line);
 std::ostream & operator<<(std::ostream &os, const Lines& lines);
 

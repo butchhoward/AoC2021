@@ -34,21 +34,12 @@ std::ostream & day09lib::operator<<(std::ostream &os, const HeightMap& map)
 }
 
 
-std::ostream & day09lib::operator<<(std::ostream &os, const Basin& basin)
-{
-    for (auto p : basin)
-    {
-        os << p;
-    }
-    return os;
-}
-
 #pragma GCC diagnostic ignored "-Wunused-function"
 std::ostream & day09lib::operator<<(std::ostream &os, const Basins& basins)
 {
     for (auto b : basins)
     {
-        os << b << std::endl;
+        os << "->" << b << std::endl;
     }
     return os;
 }
@@ -83,11 +74,12 @@ namespace {
 HeightRow find_lowpoints(const HeightMap& map)
 {
     HeightRow lowpoints;
-    auto columns = map[0].size();
-    auto rows = map.size();
 
-    auto get_adjacent = [map, columns, rows](size_t row, size_t col, int v, int h)
+    auto get_adjacent = [map](size_t row, size_t col, int v, int h)
                         {
+                            auto columns = map[0].size();
+                            auto rows = map.size();
+
                             if ( (row == 0 && v < 0) ||
                                  (row >= rows-1 && v > 0) ||
                                  (col == 0 && h < 0) ||
@@ -141,18 +133,119 @@ size_t total_risk(const HeightRow& lowpoints)
 
 }
 
-HeightMap find_basins(const HeightMap& map)
+bool is_alreay_in_basin(const Basins& basins, const Point& p)
 {
-    HeightMap basins;
-    (void)map;
+    return std::any_of(basins.cbegin(), basins.cend(),
+                    [p](const auto& b)
+                    {
+                        return b.cend() != std::find(b.cbegin(), b.cend(), p);
+                    }
+        );
+};
 
-    std::cout << "Basins: " << basins << std::endl;
+void check_basin(const Point& p, const HeightMap& map, Basin& new_basin)
+{
+
+    auto already_added = [&new_basin](const Point& p)
+    {
+        return std::find(new_basin.cbegin(), new_basin.cend(), p) != new_basin.cend();
+    };
+
+    auto add_point = [&map, &new_basin, already_added](const Point& new_point)
+    {
+        if (map[new_point.y][new_point.x] != 9)
+        {
+            if (already_added(new_point))
+                return false;
+
+            new_basin.push_back(new_point);
+            check_basin(new_point, map, new_basin);
+            return true;
+        }
+
+        return false;
+    };
+
+    int x_adj = 1;
+    for (auto x = p.x + x_adj; x < (int)map[0].size(); x+=x_adj)
+    {
+        Point new_point(x, p.y);
+        if (!add_point(new_point))
+        {
+            break;
+        }
+    }
+
+    x_adj = -1;
+    for (auto x = p.x + x_adj; x >= 0; x+=x_adj)
+    {
+        Point new_point(x, p.y);
+        if (!add_point(new_point))
+        {
+            break;
+        }
+    }
+
+    int y_adj = 1;
+    for (auto y = p.y + y_adj; y < (int)map.size(); y+=y_adj)
+    {
+        Point new_point(p.x, y);
+        if (!add_point(new_point))
+        {
+            break;
+        }
+    }
+
+    y_adj = -1;
+    for (auto y = p.y + y_adj; y >= 0; y+=y_adj)
+    {
+        Point new_point(p.x, y);
+        if (!add_point(new_point))
+        {
+            break;
+        }
+    }
+
+}
+
+Basins find_basins(const HeightMap& map)
+{
+    Basins basins;
+
+    for (auto [current_row, row] = std::tuple{size_t(0), map.cbegin()}; 
+            row != map.cend(); 
+            ++current_row, ++row
+    )
+    {
+        for (auto [current_col, height] = std::tuple{size_t(0), row->cbegin()}; 
+             height != row->cend();
+             ++current_col, ++height
+        )
+        {
+            if (*height == 9)
+                continue;    
+
+            Point p(current_col, current_row);
+
+            if (is_alreay_in_basin(basins, p))
+            {
+                continue;
+            }
+
+            Basin new_basin;
+            new_basin.push_back(p);
+            check_basin(p, map, new_basin);
+            basins.push_back(new_basin);
+        }
+    }
+
     return basins;
-
 }
 
 
-}
+} //end of namespace
+
+
 
 std::size_t day09lib::part1_solve(std::istream& data_stream)
 {
@@ -165,9 +258,22 @@ std::size_t day09lib::part2_solve(std::istream& data_stream)
 {
     auto map = parse_datastream(data_stream);
     auto basins = find_basins(map);
-    //sort basins
-    //take largest 3
-    //return product of sizes
 
-    return 0;
+    //sort basin sizes
+    std::vector<size_t> sizes;
+    for ( auto b : basins)
+    {
+        sizes.push_back(b.size());
+    }
+    std::sort(sizes.begin(), sizes.end());
+
+    //take largest 3
+    while (sizes.size() > 3)
+        sizes.erase(sizes.cbegin());
+
+    //return product of sizes
+    return std::accumulate(sizes.cbegin(), sizes.cend(), 1,
+                [](auto t, auto s){ return t * s;}
+            );
+
 }

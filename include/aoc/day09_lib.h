@@ -20,8 +20,7 @@ std::ostream & operator<<(std::ostream &os, const HeightRow& row);
 typedef std::vector<HeightRow> HeightMap;
 std::ostream & operator<<(std::ostream &os, const HeightMap& map);
 
-typedef std::vector<Point> Basin;
-std::ostream & operator<<(std::ostream &os, const Basin& basin);
+typedef Points Basin;
 
 typedef std::vector<Basin> Basins;
 std::ostream & operator<<(std::ostream &os, const Basins& basins);
