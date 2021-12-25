@@ -166,46 +166,27 @@ void check_basin(const Point& p, const HeightMap& map, Basin& new_basin)
         return false;
     };
 
-    int x_adj = 1;
-    for (auto x = p.x + x_adj; x < (int)map[0].size(); x+=x_adj)
+    auto crawl_map = [&map, add_point](const Point& p, int x_adj, int y_adj)
     {
-        Point new_point(x, p.y);
-        if (!add_point(new_point))
-        {
-            break;
-        }
-    }
 
-    x_adj = -1;
-    for (auto x = p.x + x_adj; x >= 0; x+=x_adj)
-    {
-        Point new_point(x, p.y);
-        if (!add_point(new_point))
+        for (auto [x,y] = std::tuple{p.x + x_adj, p.y + y_adj}; 
+            x < (int)map[0].size() && x >= 0 && y < (int)map.size() && y >= 0; 
+            x+=x_adj, y+=y_adj
+        )
         {
-            break;
+            Point new_point(x, y);
+            if (!add_point(new_point))
+            {
+                break;
+            }
         }
-    }
 
-    int y_adj = 1;
-    for (auto y = p.y + y_adj; y < (int)map.size(); y+=y_adj)
-    {
-        Point new_point(p.x, y);
-        if (!add_point(new_point))
-        {
-            break;
-        }
-    }
+    };
 
-    y_adj = -1;
-    for (auto y = p.y + y_adj; y >= 0; y+=y_adj)
-    {
-        Point new_point(p.x, y);
-        if (!add_point(new_point))
-        {
-            break;
-        }
-    }
-
+    crawl_map(p, 1, 0);
+    crawl_map(p, -1, 0);
+    crawl_map(p, 0, 1);
+    crawl_map(p, 0, -1);
 }
 
 Basins find_basins(const HeightMap& map)
