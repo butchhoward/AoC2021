@@ -17,9 +17,12 @@ typedef std::string NavLine;
 typedef std::vector<NavLine> NavSystem;
 std::ostream & operator<<(std::ostream &os, const NavSystem& things);
 
-std::tuple<bool, char> validate_nav_line(const NavLine& nav_line);
+typedef std::tuple<bool, char, std::string> ValidateReturnType;
+ValidateReturnType validate_nav_line(const NavLine& nav_line);
 
 NavSystem parse_datastream(std::istream& data_stream);
+
+std::size_t calculate_finishing_score(const std::string& finishing);
 
 
 }
