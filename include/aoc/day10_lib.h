@@ -12,17 +12,6 @@ std::size_t part1_solve(std::istream& data_stream);
 std::size_t part2_solve(std::istream& data_stream);
 
 
-typedef struct NavChunk {
-    NavChunk() :
-        start('\0'), end('\0')
-    {}
-
-    char start;
-    char end;
-
-} NavChunk;
-typedef std::vector<NavChunk> NavChunks;
-
 
 typedef std::string NavLine;
 typedef std::vector<NavLine> NavSystem;

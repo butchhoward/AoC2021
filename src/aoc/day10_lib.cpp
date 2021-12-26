@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <numeric>
 #include <functional>
+#include <stack>
 
 using namespace day10lib;
 
@@ -34,20 +35,6 @@ std::ostream & day10lib::operator<<(std::ostream &os, const NavSystem& things)
 std::tuple<bool, char> day10lib::validate_nav_line(const NavLine& nav_line)
 {
 
-    NavChunks navchunks;
-
-    std::map<char,int> marker_counters
-    {
-        {'(',0},
-        {'[',0},
-        {'{',0},
-        {'<',0},
-        {')',0},
-        {']',0},
-        {'}',0},
-        {'>',0}
-    };
-
     std::map<char,char> marker_starts
     {
         {'(',')'},
@@ -66,26 +53,31 @@ std::tuple<bool, char> day10lib::validate_nav_line(const NavLine& nav_line)
 
     std::istringstream v(nav_line);
 
-    char c;
+    std::stack<char> chunk_ends;
 
-    while( !v.eof() )
+
+    while( true )
     {
+        char c;
         v >> c;
 
-        if ( ! marker_counters.contains(c) )
+        if ( v.eof() )
+            break;
+
+        if (marker_starts.contains(c))
         {
-            return std::tuple<bool, char>(false, c);
+            chunk_ends.push(c);
+            continue;
         }
 
-        marker_counters.insert_or_assign(c, marker_counters.at(c)+1);
-        if (marker_ends.contains(c))
+        auto expected_start = marker_ends.at(c);
+
+        if ( expected_start != chunk_ends.top() )
         {
-            char marker_start = marker_ends.at(c);
-            if (marker_counters.at(c) > marker_counters.at(marker_start))
-            {
-                return std::tuple<bool, char>(false, c);   
-            }
+            return std::tuple<bool, char>(false, c);   
         }
+
+        chunk_ends.pop();
     }
 
     return std::tuple<bool, char>(true, '\0');
@@ -125,7 +117,6 @@ std::size_t day10lib::part1_solve(std::istream& data_stream)
                                 {
                                     return t;
                                 }
-                                std::cout << "Invalid: " << n << " : " << c << std::endl;
                                 return t + scores.at(c);
                             }
     );

@@ -31,25 +31,56 @@ TEST( day10, test_sample_data ) {
     EXPECT_EQ(26397, p);
 }
 
-TEST( day10, test_validate ) 
+TEST( day10, test_validate_mystery ) 
 {
-    NavLine n = "{([(<{}[<>[]}>{[]{[(<()>"; // - Expected ], but found } instead
-
+    NavLine n = "[({(<(())[]>[[{[]{<()<>>";
     auto [v,c] = validate_nav_line(n);
 
-    EXPECT_FALSE(v);
-    EXPECT_EQ(c, '}');
+    EXPECT_TRUE(v);
+    EXPECT_EQ(c, '\0');
 }
 
-// TEST( day10, test_data_1 ) {
-//     std::string data_file_name = "../data/day10_data.txt";
-//     std::ifstream datafile(data_file_name);
-//     ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
+TEST( day10, test_validate ) 
+{
+    typedef struct Data {
+        NavLine n;
+        char c;
+        bool v;
+    } Data;
 
-//     auto p1 = part1_solve(datafile);
+    std::vector<Data> test_data
+    {
+        {"{([(<{}[<>[]}>{[]{[(<()>", '}', false},
+        {"[[<[([]))<([[{}[[()]]]", ')', false},
+        {"[{[{({}]{}}([{[{{{}}([]", ']', false},
+        {"[<(<(<(<{}))><([]([]()", ')', false},
+        {"<{([([[(<>()){}]>(<<{{", '>', false},
+    
+        {"[({(<(())[]>[[{[]{<()<>>", '\0', true},
+        {"[(()[<>])]({[<{<<[]>>(",'\0', true},
+        {"(((({<>}<{<{<>}{[]{[]{}",'\0', true},
+        {"{<[[]]>}<{[{[{[]{()[[[]",'\0', true},
+        {"<{([{{}}[<[[[<>{}]]]>[]]",'\0', true}
+    };
 
-//     EXPECT_EQ(999999999, p1);
-// }
+    for ( auto d : test_data)
+    {
+        auto [v,c] = validate_nav_line(d.n);
+
+        EXPECT_EQ(v, d.v) << d.n;
+        EXPECT_EQ(c, d.c);
+    }
+}
+
+TEST( day10, test_data_1 ) {
+    std::string data_file_name = "../data/day10_data.txt";
+    std::ifstream datafile(data_file_name);
+    ASSERT_TRUE(datafile) << "Error opening input file" << std::endl;
+
+    auto p1 = part1_solve(datafile);
+
+    EXPECT_EQ(411471, p1);
+}
 
 // TEST( day10, test_sample_data_part2 ) {
 //     std::istringstream data_stream(sample_data);
