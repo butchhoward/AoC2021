@@ -7,6 +7,7 @@
 #include "aoc/day07.h"
 #include "aoc/day08.h"
 #include "aoc/day09.h"
+#include "aoc/day10.h"
 //MAKEMODULE INCLUDE MARKER. DO NOT DELETE
 
 
@@ -62,6 +63,7 @@ int main(int argc, char *argv[])
     ,{7, day07}
     ,{8, day08}
     ,{9, day09}
+    ,{10, day10}
     //MAKEMODULE LIST MARKER. DO NOT DELETE
     };
 

@@ -1,5 +1,6 @@
 #include "aoc/day08_lib.h"
 #include <library/parser_helpers.h>
+#include "library/stream_helpers.h"
 
 #include <iostream>
 #include <sstream>

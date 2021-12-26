@@ -2,6 +2,8 @@
 # show up in IDEs unless they are listed in add_library.
 
 set(HEADER_LIST
+"${PROJECT_SOURCE_DIR}/include/aoc/day10.h"
+"${PROJECT_SOURCE_DIR}/include/aoc/day10_lib.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day09.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day09_lib.h"
 "${PROJECT_SOURCE_DIR}/include/aoc/day08.h"
@@ -23,12 +25,15 @@ set(HEADER_LIST
 "${PROJECT_SOURCE_DIR}/include/library/chrono_helpers.h"
 "${PROJECT_SOURCE_DIR}/include/library/parser_helpers.h"
 "${PROJECT_SOURCE_DIR}/include/library/points.h"
+"${PROJECT_SOURCE_DIR}/include/library/stream_helpers.h"
 
 )
 
 # These can be multiple libraries built here
 # Just add sets of these three commands
 add_library(aoc_library
+"${PROJECT_SOURCE_DIR}/src/aoc/day10.cpp"
+"${PROJECT_SOURCE_DIR}/src/aoc/day10_lib.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day09.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day09_lib.cpp"
 "${PROJECT_SOURCE_DIR}/src/aoc/day08.cpp"
@@ -57,7 +62,8 @@ add_library(aoc_core
         "${PROJECT_SOURCE_DIR}/src/library/chrono_helpers.cpp"
         "${PROJECT_SOURCE_DIR}/src/library/parser_helpers.cpp"
         "${PROJECT_SOURCE_DIR}/src/library/points.cpp"
-            ${HEADER_LIST})
+        "${PROJECT_SOURCE_DIR}/src/library/stream_helpers.cpp"
+        ${HEADER_LIST})
 target_include_directories(aoc_core PUBLIC ../include)
 target_compile_features(aoc_core PUBLIC cxx_std_20)
 
